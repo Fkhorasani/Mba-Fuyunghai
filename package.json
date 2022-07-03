@@ -1,0 +1,26 @@
+{
+  "name": "mba-fuyunghai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "node": "^16.15.1"
+  },
+  "dependencies": {
+    "discord.js": "^13.8.1",
+    "express": "^4.18.1",
+    "ffmpeg": "^0.0.4",
+    "moment": "^2.29.3",
+    "nekos.life": "^3.0.0",
+    "snekfetch": "^4.0.4",
+    "superagent": "^8.0.0",
+    "ytdl-core": "^4.11.0"
+  }
+}
