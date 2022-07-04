@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const fetch = require("node-fetch");
 
 module.exports.run = async (client, message, args) =>{
+    
     const url = "http://api.adviceslip.com/advice"
     const res = await fetch(url);
     const json = await res.json();
