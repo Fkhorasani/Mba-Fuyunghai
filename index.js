@@ -13,6 +13,16 @@ const fs = require("fs");
 const prefix = "+";
 const Discord = require("discord.js");
 
+// const {REST} = require("@discordjs/rest");
+// const {Routes} = require("@discord-api-types/v9");
+// const {Player} = require("discord-player");
+
+// const LOAD_SLASH = process.argv[2] == "load"
+
+const CLIENT_ID = "882465267760914482" //bot
+const GUILD_ID = "318680442721140736" //server
+
+
 
 app.listen(3000,() =>{
   console.log("Project is running!")
@@ -25,9 +35,62 @@ app.get("/", (req,res)=>{
 
 const client = new Discord.Client(
   {
-    intents:["GUILDS", "GUILD_MESSAGES"],
+    intents:["GUILDS", "GUILD_MESSAGES","GUILD_VOICE_STATES"],
     allowedMentions:["users"]
   });
+
+//slash command
+
+// client.slashcommands = new Discord.Collection()
+// client.player = new Player(client, {
+//   ytdlOptions:{
+//     quality: "highestaudio"
+//     highWaterMark: 1<<25
+//   }
+// })
+
+// let command = []
+
+// const slashFiles = fs.readdirSync("./slash").filter(file => file.endsWith(".js"));
+
+// for(const file of slashFiles){
+//   const slashcmd =  require(`./slash/${file}`)
+//   client.slashcommands.set(slashcmd.data.name, slashcmd)
+//   if(LOAD_SLASH) command.push(slashcmd.data.toJSON())
+// }
+
+// if(LOAD_SLASH){
+//   const rest = new REST({version:"9"}).setToken(process.env.token)
+//   const.log("Deploying slash commands")
+//   rest.put(Routes.applicationGuildCommands(CLIENT_ID,GUILD_ID),{body: command})
+//   .then(()=>{
+//     consol.loh("Successfully laods")
+//     process.exit(0)
+//   })
+//   .catch((err)=>{
+//     if(err){
+//       console.log(err)
+//       process.exit(1)
+//     }
+//   })
+// } else{
+//   client.on("ready", ()=>{
+//     console.log(`Logged in as ${client.user.tag}`)
+//   })
+//   client.on("interactionCreate",(interaction)=>{
+//     async function handleCommand(){
+//       if(!interaction.isCommand()) return
+
+//       const slashcmd = client.slashcommands.get(interaction.commandName)
+//       if (!slashcmd) interaction.reply("not a valid slash command")
+
+//       await interaction.deferReply()
+//       await slashcmd.run({client, interaction})
+//     }
+//     handleCommand()
+//   })
+//   client.login(process.env.token)
+// }
 
 client.commands = new Discord.Collection();
 const commands = fs.readdirSync("./Commands").filter(file => file.endsWith(".js"));
@@ -46,6 +109,7 @@ client.on("messageCreate", async (message) =>{
     const args = message.content.slice(prefix.length).trim().split(/ + /g)
     const commandName = args.shift()
     const command = client.commands.get(commandName)
+    
     let splitMessage = message.content.split(" ");
     if (splitMessage[0].toLowerCase() === "+gif") {
         // const gifSearchText = splitMessage.slice(0, splitMessage.length).join(" ");
@@ -77,6 +141,20 @@ client.on("messageCreate", async (message) =>{
 
       
     }
+    else if (splitMessage[0].toLowerCase() === "+sticker") {
+    const stickerSearchText = splitMessage.slice(0, splitMessage.length).join(" ");
+
+    const url = `http://api.giphy.com/v1/stickers/search?q=${stickerSearchText}
+    &api_key=${process.env.giphy}&limit=150`;
+
+    const res = await fetch(url);
+
+    const json = await res.json();
+    
+    const randomIndex = Math.floor(Math.random() * json.data.length);
+
+    message.channel.send(json.data[randomIndex].url);
+  }
     else if(!command) return
     else command.run(client, message, args)
   }
