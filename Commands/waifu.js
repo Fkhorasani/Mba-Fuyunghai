@@ -10,3 +10,4 @@ module.exports.run = async (client, message, args) =>{
 }
 
 module.exports.name = "waifu"
+// https://waifu.pics/docs
